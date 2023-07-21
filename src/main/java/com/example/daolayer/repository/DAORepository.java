@@ -1,6 +1,7 @@
 package com.example.daolayer.repository;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -8,9 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
@@ -23,18 +22,13 @@ public class DAORepository {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public String getProductName(String customerName) {
-        Map<String, Object> parametersMap = new HashMap<>();
-        parametersMap.put("name", customerName);
+    public List<String> getProductName(String customerName) {
+        MapSqlParameterSource parametersMap = new MapSqlParameterSource();
+        parametersMap.addValue("name", customerName);
         String script = read(pathToScript);
-        List<String> productNames = namedParameterJdbcTemplate.query(
-                script, parametersMap,
-                (rs, rowNum) -> rs.getString("product_name")
+        return namedParameterJdbcTemplate.queryForList(
+                script, parametersMap, String.class
         );
-        return productNames.stream()
-                .findFirst()
-                .orElse("Ничего не найдено");
-
     }
 
     private static String read(String scriptFileName) {
