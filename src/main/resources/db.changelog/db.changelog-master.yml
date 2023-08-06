@@ -1,0 +1,15 @@
+      databaseChangeLog:
+        - include:
+            file: migrations/schema/schema1.sql
+            relativeToChangeLogFile: true
+        - include:
+            file: migrations/schema/schema2.sql
+            relativeToChangeLogFile: true
+        - include:
+            file: migrations/data/data1.sql
+            relativeToChangeLogFile: true
+            splitStatement: true
+        - include:
+            file: migrations/data/data2.sql
+            relativeToChangeLogFile: true
+            splitStatement: true
